@@ -1,0 +1,894 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SurakshaX | Login</title>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+
+            background:
+                radial-gradient(
+                    circle at 10% 10%,
+                    rgba(0, 255, 170, 0.15),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 90% 90%,
+                    rgba(0, 130, 255, 0.16),
+                    transparent 30%
+                ),
+                #050b14;
+
+            color: white;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            overflow: hidden;
+        }
+
+
+        /* =========================
+           BACKGROUND
+        ========================= */
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.35;
+            pointer-events: none;
+        }
+
+        .orb-one {
+            width: 300px;
+            height: 300px;
+            background: #00ffa6;
+            top: -120px;
+            left: -120px;
+        }
+
+        .orb-two {
+            width: 350px;
+            height: 350px;
+            background: #0077ff;
+            right: -150px;
+            bottom: -150px;
+        }
+
+
+        /* =========================
+           LOGIN CARD
+        ========================= */
+
+        .login-card {
+
+            width: 420px;
+            max-width: 92%;
+
+            padding: 42px;
+
+            background:
+                rgba(13, 27, 42, 0.92);
+
+            border:
+                1px solid rgba(255,255,255,0.08);
+
+            border-radius: 25px;
+
+            backdrop-filter: blur(20px);
+
+            box-shadow:
+                0 30px 80px rgba(0,0,0,0.45);
+
+            position: relative;
+
+            z-index: 2;
+
+            animation:
+                appear 0.7s ease;
+        }
+
+
+        @keyframes appear {
+
+            from {
+                opacity: 0;
+                transform:
+                    translateY(25px)
+                    scale(0.97);
+            }
+
+            to {
+                opacity: 1;
+                transform:
+                    translateY(0)
+                    scale(1);
+            }
+
+        }
+
+
+        /* =========================
+           BRAND
+        ========================= */
+
+        .brand {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+
+        .brand-icon {
+
+            width: 68px;
+            height: 68px;
+
+            margin: auto;
+            margin-bottom: 16px;
+
+            border-radius: 20px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 34px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #25d366,
+                    #43a5ff
+                );
+
+            box-shadow:
+                0 12px 35px
+                rgba(37,211,102,0.2);
+        }
+
+
+        .brand h1 {
+
+            font-size: 30px;
+            letter-spacing: -1px;
+
+        }
+
+
+        .brand p {
+
+            margin-top: 8px;
+
+            color: #8da1b5;
+
+            font-size: 14px;
+
+        }
+
+
+        /* =========================
+           MESSAGE
+        ========================= */
+
+        .message {
+
+            display: none;
+
+            padding: 12px;
+
+            border-radius: 10px;
+
+            margin-bottom: 18px;
+
+            font-size: 13px;
+
+            line-height: 1.5;
+
+        }
+
+
+        .message.error {
+
+            background:
+                rgba(255,77,94,0.10);
+
+            border:
+                1px solid rgba(255,77,94,0.15);
+
+            color: #ff929c;
+
+        }
+
+
+        .message.success {
+
+            background:
+                rgba(37,211,102,0.10);
+
+            border:
+                1px solid rgba(37,211,102,0.15);
+
+            color: #70eb9c;
+
+        }
+
+
+        /* =========================
+           INPUTS
+        ========================= */
+
+        .input-group {
+
+            margin-bottom: 20px;
+
+        }
+
+
+        .input-group label {
+
+            display: block;
+
+            margin-bottom: 8px;
+
+            color: #b9c7d6;
+
+            font-size: 13px;
+
+        }
+
+
+        .input-wrapper {
+
+            position: relative;
+
+        }
+
+
+        .input-icon {
+
+            position: absolute;
+
+            left: 15px;
+
+            top: 50%;
+
+            transform:
+                translateY(-50%);
+
+            color: #6e8398;
+
+            font-size: 16px;
+
+        }
+
+
+        .input-wrapper input {
+
+            width: 100%;
+
+            padding:
+                14px
+                14px
+                14px
+                44px;
+
+            border-radius: 12px;
+
+            border:
+                1px solid
+                rgba(255,255,255,0.08);
+
+            background:
+                #071522;
+
+            color: white;
+
+            outline: none;
+
+            font-size: 14px;
+
+            transition: 0.25s;
+
+        }
+
+
+        .input-wrapper input::placeholder {
+
+            color: #53687c;
+
+        }
+
+
+        .input-wrapper input:focus {
+
+            border-color:
+                #43a5ff;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(67,165,255,0.10);
+
+        }
+
+
+        /* =========================
+           LOGIN BUTTON
+        ========================= */
+
+        .login-btn {
+
+            width: 100%;
+
+            padding: 14px;
+
+            margin-top: 4px;
+
+            border: none;
+
+            border-radius: 12px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #25d366,
+                    #43a5ff
+                );
+
+            color: #04101c;
+
+            font-size: 15px;
+
+            font-weight: 800;
+
+            cursor: pointer;
+
+            transition: 0.25s;
+
+        }
+
+
+        .login-btn:hover {
+
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                0 12px 30px
+                rgba(37,211,102,0.18);
+
+        }
+
+
+        .login-btn:disabled {
+
+            opacity: 0.6;
+
+            cursor:
+                not-allowed;
+
+            transform:
+                none;
+
+        }
+
+
+        /* =========================
+           REGISTER
+        ========================= */
+
+        .register {
+
+            text-align: center;
+
+            margin-top: 22px;
+
+            color: #8295a8;
+
+            font-size: 14px;
+
+        }
+
+
+        .register a {
+
+            color: #55aeff;
+
+            font-weight: 700;
+
+            text-decoration: none;
+
+        }
+
+
+        .register a:hover {
+
+            text-decoration:
+                underline;
+
+        }
+
+
+        /* =========================
+           SECURITY
+        ========================= */
+
+        .security {
+
+            margin-top: 27px;
+
+            padding-top: 20px;
+
+            border-top:
+                1px solid
+                rgba(255,255,255,0.06);
+
+            text-align: center;
+
+            color: #62768b;
+
+            font-size: 12px;
+
+        }
+
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 500px) {
+
+            .login-card {
+
+                padding: 28px 22px;
+
+            }
+
+            .brand h1 {
+
+                font-size: 26px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- Background -->
+
+    <div class="orb orb-one"></div>
+    <div class="orb orb-two"></div>
+
+
+    <!-- Login -->
+
+    <div class="login-card">
+
+
+        <!-- Brand -->
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                🛡️
+            </div>
+
+            <h1>
+                SurakshaX
+            </h1>
+
+            <p>
+                Smart LPG Safety Monitoring
+            </p>
+
+        </div>
+
+
+        <!-- Message -->
+
+        <div
+            id="message"
+            class="message">
+        </div>
+
+
+        <!-- Login Form -->
+
+        <form id="loginForm">
+
+
+            <!-- Email -->
+
+            <div class="input-group">
+
+                <label>
+                    Email Address
+                </label>
+
+                <div class="input-wrapper">
+
+                    <span class="input-icon">
+                        ✉
+                    </span>
+
+                    <input
+                        id="email"
+                        type="email"
+                        placeholder="Enter your email"
+                        autocomplete="email"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- Password -->
+
+            <div class="input-group">
+
+                <label>
+                    Password
+                </label>
+
+                <div class="input-wrapper">
+
+                    <span class="input-icon">
+                        🔒
+                    </span>
+
+                    <input
+                        id="password"
+                        type="password"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- Login Button -->
+
+            <button
+                id="loginButton"
+                class="login-btn"
+                type="submit">
+
+                Sign In
+
+            </button>
+
+
+        </form>
+
+
+        <!-- Register -->
+
+        <div class="register">
+
+            Don't have an account?
+
+            <a href="register.html">
+                Create Account
+            </a>
+
+        </div>
+
+
+        <!-- Security -->
+
+        <div class="security">
+
+            🔐 Secure authentication powered by Firebase
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =========================
+         FIREBASE
+    ========================= -->
+
+    <script>
+
+        const firebaseConfig = {
+
+            apiKey:
+                "AIzaSyCVMffiq5d-3Cfu20TNCF2-tW1IIS7qv6k",
+
+            authDomain:
+                "testing-752a4.firebaseapp.com",
+
+            databaseURL:
+                "https://testing-752a4-default-rtdb.asia-southeast1.firebasedatabase.app",
+
+            projectId:
+                "testing-752a4",
+
+            storageBucket:
+                "testing-752a4.firebasestorage.app",
+
+            messagingSenderId:
+                "1021193926515",
+
+            appId:
+                "1:1021193926515:web:0b223572778b4aa778b706",
+
+            measurementId:
+                "G-LLS4FKKLK5"
+
+        };
+
+
+        // Initialize Firebase
+
+        firebase.initializeApp(
+            firebaseConfig
+        );
+
+
+        // Firebase Authentication
+
+        const auth =
+            firebase.auth();
+
+
+        // Elements
+
+        const loginForm =
+            document.getElementById(
+                "loginForm"
+            );
+
+        const emailInput =
+            document.getElementById(
+                "email"
+            );
+
+        const passwordInput =
+            document.getElementById(
+                "password"
+            );
+
+        const loginButton =
+            document.getElementById(
+                "loginButton"
+            );
+
+        const message =
+            document.getElementById(
+                "message"
+            );
+
+
+        // =========================
+        // SHOW MESSAGE
+        // =========================
+
+        function showMessage(
+            text,
+            type
+        ) {
+
+            message.textContent =
+                text;
+
+            message.className =
+                "message " + type;
+
+            message.style.display =
+                "block";
+
+        }
+
+
+        // =========================
+        // LOGIN
+        // =========================
+
+        loginForm.addEventListener(
+            "submit",
+            async function(event) {
+
+                event.preventDefault();
+
+
+                const email =
+                    emailInput.value.trim();
+
+                const password =
+                    passwordInput.value;
+
+
+                if (!email || !password) {
+
+                    showMessage(
+                        "Please enter your email and password.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                loginButton.disabled =
+                    true;
+
+                loginButton.textContent =
+                    "Signing in...";
+
+
+                try {
+
+                    await auth
+                        .signInWithEmailAndPassword(
+                            email,
+                            password
+                        );
+
+
+                    showMessage(
+                        "Login successful. Opening dashboard...",
+                        "success"
+                    );
+
+
+                    setTimeout(
+                        function() {
+
+                            window.location.href =
+                                "dashboard.html";
+
+                        },
+                        700
+                    );
+
+
+                }
+
+                catch(error) {
+
+                    console.error(
+                        "Firebase Login Error:",
+                        error
+                    );
+
+
+                    let errorMessage =
+                        "Login failed. Please check your email and password.";
+
+
+                    switch(error.code) {
+
+                        case
+                        "auth/invalid-credential":
+
+                            errorMessage =
+                                "Invalid email or password.";
+
+                            break;
+
+
+                        case
+                        "auth/user-not-found":
+
+                            errorMessage =
+                                "No account exists with this email.";
+
+                            break;
+
+
+                        case
+                        "auth/wrong-password":
+
+                            errorMessage =
+                                "Incorrect password.";
+
+                            break;
+
+
+                        case
+                        "auth/invalid-email":
+
+                            errorMessage =
+                                "Please enter a valid email address.";
+
+                            break;
+
+
+                        case
+                        "auth/too-many-requests":
+
+                            errorMessage =
+                                "Too many login attempts. Try again later.";
+
+                            break;
+
+
+                        case
+                        "auth/network-request-failed":
+
+                            errorMessage =
+                                "Network error. Check your internet connection.";
+
+                            break;
+
+
+                        default:
+
+                            errorMessage =
+                                error.message;
+
+                    }
+
+
+                    showMessage(
+                        errorMessage,
+                        "error"
+                    );
+
+
+                    loginButton.disabled =
+                        false;
+
+                    loginButton.textContent =
+                        "Sign In";
+
+                }
+
+            }
+        );
+
+
+        // =========================
+        // CHECK EXISTING LOGIN
+        // =========================
+
+        auth.onAuthStateChanged(
+            function(user) {
+
+                if(user) {
+
+                    window.location.href =
+                        "dashboard.html";
+
+                }
+
+            }
+        );
+
+    </script>
+
+</body>
+</html>

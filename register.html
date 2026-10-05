@@ -1,0 +1,851 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SurakshaX | Register</title>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+
+            background:
+                radial-gradient(circle at 10% 10%,
+                    rgba(0,255,170,.15),
+                    transparent 30%),
+                radial-gradient(circle at 90% 90%,
+                    rgba(0,130,255,.16),
+                    transparent 30%),
+                #050b14;
+
+            color: white;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            padding: 30px 15px;
+        }
+
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: .35;
+            pointer-events: none;
+        }
+
+        .orb-one {
+            width: 300px;
+            height: 300px;
+            background: #00ffa6;
+            top: -120px;
+            left: -120px;
+        }
+
+        .orb-two {
+            width: 350px;
+            height: 350px;
+            background: #0077ff;
+            right: -150px;
+            bottom: -150px;
+        }
+
+        .register-card {
+            width: 440px;
+            max-width: 94%;
+
+            padding: 40px;
+
+            background: rgba(13,27,42,.92);
+
+            border:
+                1px solid rgba(255,255,255,.08);
+
+            border-radius: 25px;
+
+            backdrop-filter: blur(20px);
+
+            box-shadow:
+                0 30px 80px rgba(0,0,0,.45);
+
+            position: relative;
+            z-index: 2;
+
+            animation: appear .6s ease;
+        }
+
+        @keyframes appear {
+            from {
+                opacity: 0;
+                transform:
+                    translateY(25px)
+                    scale(.97);
+            }
+
+            to {
+                opacity: 1;
+                transform:
+                    translateY(0)
+                    scale(1);
+            }
+        }
+
+        .brand {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .brand-icon {
+            width: 68px;
+            height: 68px;
+
+            margin: 0 auto 15px;
+
+            border-radius: 20px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            font-size: 34px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #25d366,
+                    #43a5ff
+                );
+        }
+
+        .brand h1 {
+            font-size: 30px;
+        }
+
+        .brand p {
+            margin-top: 7px;
+            color: #8da1b5;
+            font-size: 14px;
+        }
+
+        .input-group {
+            margin-bottom: 17px;
+        }
+
+        .input-group label {
+            display: block;
+
+            margin-bottom: 7px;
+
+            font-size: 13px;
+
+            color: #b9c7d6;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+
+            left: 15px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            color: #6e8398;
+        }
+
+        input {
+            width: 100%;
+
+            padding:
+                14px
+                14px
+                14px
+                44px;
+
+            border-radius: 12px;
+
+            border:
+                1px solid
+                rgba(255,255,255,.08);
+
+            background: #071522;
+
+            color: white;
+
+            outline: none;
+
+            transition: .25s;
+        }
+
+        input:focus {
+            border-color: #43a5ff;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(67,165,255,.1);
+        }
+
+        input::placeholder {
+            color: #53687c;
+        }
+
+        .register-btn {
+            width: 100%;
+
+            padding: 14px;
+
+            margin-top: 5px;
+
+            border: none;
+
+            border-radius: 12px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #25d366,
+                    #43a5ff
+                );
+
+            color: #04101c;
+
+            font-size: 15px;
+            font-weight: 800;
+
+            cursor: pointer;
+
+            transition: .25s;
+        }
+
+        .register-btn:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 12px 30px
+                rgba(37,211,102,.18);
+        }
+
+        .register-btn:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .message {
+            display: none;
+
+            padding: 12px;
+
+            border-radius: 10px;
+
+            margin-bottom: 17px;
+
+            font-size: 13px;
+        }
+
+        .message.error {
+            background:
+                rgba(255,77,94,.10);
+
+            color: #ff929c;
+
+            border:
+                1px solid
+                rgba(255,77,94,.15);
+        }
+
+        .message.success {
+            background:
+                rgba(37,211,102,.10);
+
+            color: #70eb9c;
+
+            border:
+                1px solid
+                rgba(37,211,102,.15);
+        }
+
+        .password-info {
+            color: #62768b;
+
+            font-size: 11px;
+
+            margin-top: 6px;
+        }
+
+        .login-link {
+            text-align: center;
+
+            margin-top: 22px;
+
+            color: #8295a8;
+
+            font-size: 14px;
+        }
+
+        .login-link a {
+            color: #55aeff;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .security {
+            margin-top: 25px;
+
+            padding-top: 18px;
+
+            border-top:
+                1px solid
+                rgba(255,255,255,.06);
+
+            text-align: center;
+
+            color: #62768b;
+
+            font-size: 12px;
+        }
+
+        @media(max-width:500px) {
+            .register-card {
+                padding: 28px 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="orb orb-one"></div>
+    <div class="orb orb-two"></div>
+
+    <div class="register-card">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                🛡️
+            </div>
+
+            <h1>
+                Create Account
+            </h1>
+
+            <p>
+                Join SurakshaX Smart Safety System
+            </p>
+
+        </div>
+
+
+        <div
+            id="message"
+            class="message">
+        </div>
+
+
+        <form id="registerForm">
+
+            <!-- Name -->
+
+            <div class="input-group">
+
+                <label>
+                    Full Name
+                </label>
+
+                <div class="input-wrapper">
+
+                    <span class="input-icon">
+                        👤
+                    </span>
+
+                    <input
+                        id="name"
+                        type="text"
+                        placeholder="Enter your name"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- Email -->
+
+            <div class="input-group">
+
+                <label>
+                    Email Address
+                </label>
+
+                <div class="input-wrapper">
+
+                    <span class="input-icon">
+                        ✉
+                    </span>
+
+                    <input
+                        id="email"
+                        type="email"
+                        placeholder="Enter your email"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- Password -->
+
+            <div class="input-group">
+
+                <label>
+                    Password
+                </label>
+
+                <div class="input-wrapper">
+
+                    <span class="input-icon">
+                        🔒
+                    </span>
+
+                    <input
+                        id="password"
+                        type="password"
+                        placeholder="Create password"
+                        minlength="6"
+                        required
+                    >
+
+                </div>
+
+                <div class="password-info">
+                    Minimum 6 characters
+                </div>
+
+            </div>
+
+
+            <!-- Confirm Password -->
+
+            <div class="input-group">
+
+                <label>
+                    Confirm Password
+                </label>
+
+                <div class="input-wrapper">
+
+                    <span class="input-icon">
+                        🔐
+                    </span>
+
+                    <input
+                        id="confirmPassword"
+                        type="password"
+                        placeholder="Confirm password"
+                        minlength="6"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <button
+                id="registerButton"
+                type="submit"
+                class="register-btn">
+
+                Create Account
+
+            </button>
+
+        </form>
+
+
+        <div class="login-link">
+
+            Already have an account?
+
+            <a href="login.html">
+                Sign In
+            </a>
+
+        </div>
+
+
+        <div class="security">
+            🔐 Firebase secured authentication
+        </div>
+
+    </div>
+
+
+<script>
+
+    // =========================================
+    // FIREBASE CONFIGURATION
+    // =========================================
+
+    const firebaseConfig = {
+
+        apiKey:
+            "AIzaSyCVMffiq5d-3Cfu20TNCF2-tW1IIS7qv6k",
+
+        authDomain:
+            "testing-752a4.firebaseapp.com",
+
+        databaseURL:
+            "https://testing-752a4-default-rtdb.asia-southeast1.firebasedatabase.app",
+
+        projectId:
+            "testing-752a4",
+
+        storageBucket:
+            "testing-752a4.firebasestorage.app",
+
+        messagingSenderId:
+            "1021193926515",
+
+        appId:
+            "1:1021193926515:web:0b223572778b4aa778b706",
+
+        measurementId:
+            "G-LLS4FKKLK5"
+
+    };
+
+
+    // =========================================
+    // INITIALIZE FIREBASE
+    // =========================================
+
+    firebase.initializeApp(
+        firebaseConfig
+    );
+
+
+    const auth =
+        firebase.auth();
+
+
+    const database =
+        firebase.database();
+
+
+    // =========================================
+    // ELEMENTS
+    // =========================================
+
+    const registerForm =
+        document.getElementById(
+            "registerForm"
+        );
+
+
+    const registerButton =
+        document.getElementById(
+            "registerButton"
+        );
+
+
+    const message =
+        document.getElementById(
+            "message"
+        );
+
+
+    // =========================================
+    // SHOW MESSAGE
+    // =========================================
+
+    function showMessage(
+        text,
+        type
+    ) {
+
+        message.textContent =
+            text;
+
+        message.className =
+            "message " + type;
+
+        message.style.display =
+            "block";
+
+    }
+
+
+    // =========================================
+    // REGISTER
+    // =========================================
+
+    registerForm.addEventListener(
+        "submit",
+        async function(event) {
+
+            event.preventDefault();
+
+
+            const name =
+                document
+                    .getElementById("name")
+                    .value
+                    .trim();
+
+
+            const email =
+                document
+                    .getElementById("email")
+                    .value
+                    .trim();
+
+
+            const password =
+                document
+                    .getElementById("password")
+                    .value;
+
+
+            const confirmPassword =
+                document
+                    .getElementById(
+                        "confirmPassword"
+                    )
+                    .value;
+
+
+            // Check passwords
+
+            if (
+                password !==
+                confirmPassword
+            ) {
+
+                showMessage(
+                    "Passwords do not match.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            if (
+                password.length < 6
+            ) {
+
+                showMessage(
+                    "Password must contain at least 6 characters.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            registerButton.disabled =
+                true;
+
+
+            registerButton.textContent =
+                "Creating Account...";
+
+
+            try {
+
+                // =================================
+                // CREATE FIREBASE USER
+                // =================================
+
+                const result =
+                    await auth
+                        .createUserWithEmailAndPassword(
+                            email,
+                            password
+                        );
+
+
+                const user =
+                    result.user;
+
+
+                // =================================
+                // UPDATE DISPLAY NAME
+                // =================================
+
+                await user.updateProfile({
+
+                    displayName:
+                        name
+
+                });
+
+
+                // =================================
+                // SAVE USER TO DATABASE
+                // =================================
+
+                await database
+                    .ref(
+                        "users/" +
+                        user.uid
+                    )
+                    .set({
+
+                        name:
+                            name,
+
+                        email:
+                            email,
+
+                        createdAt:
+                            firebase
+                                .database
+                                .ServerValue
+                                .TIMESTAMP
+
+                    });
+
+
+                // =================================
+                // SUCCESS
+                // =================================
+
+                showMessage(
+                    "Account created successfully. Opening dashboard...",
+                    "success"
+                );
+
+
+                setTimeout(
+                    function() {
+
+                        window.location.href =
+                            "dashboard.html";
+
+                    },
+                    1000
+                );
+
+
+            }
+
+            catch(error) {
+
+                console.error(
+                    error
+                );
+
+
+                let errorMessage =
+                    "Unable to create account.";
+
+
+                switch(
+                    error.code
+                ) {
+
+                    case
+                    "auth/email-already-in-use":
+
+                        errorMessage =
+                            "An account already exists with this email.";
+
+                        break;
+
+
+                    case
+                    "auth/invalid-email":
+
+                        errorMessage =
+                            "Please enter a valid email address.";
+
+                        break;
+
+
+                    case
+                    "auth/weak-password":
+
+                        errorMessage =
+                            "Password is too weak.";
+
+                        break;
+
+
+                    case
+                    "auth/operation-not-allowed":
+
+                        errorMessage =
+                            "Email/password registration is not enabled in Firebase.";
+
+                        break;
+
+
+                    case
+                    "auth/network-request-failed":
+
+                        errorMessage =
+                            "Network error. Check your internet connection.";
+
+                        break;
+
+
+                    default:
+
+                        errorMessage =
+                            error.message;
+
+                }
+
+
+                showMessage(
+                    errorMessage,
+                    "error"
+                );
+
+
+                registerButton.disabled =
+                    false;
+
+
+                registerButton.textContent =
+                    "Create Account";
+
+            }
+
+        }
+    );
+
+</script>
+
+</body>
+</html>
